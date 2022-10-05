@@ -51,6 +51,93 @@
         "title": "JDBC URL Params",
         "type": "string",
         "order": 5
+      },
+      "ssl_mode": {
+        "title": "SSL modes",
+        "description": "SSL connection modes. \n <b>disable</b> - Chose this mode to disable encryption of communication between Airbyte and destination database\n <b>allow</b> - Chose this mode to enable encryption only when required by the source database\n <b>prefer</b> - Chose this mode to allow unencrypted connection only if the source database does not support encryption\n <b>require</b> - Chose this mode to always require encryption. If the source database server does not support encryption, connection will fail\n  <b>verify-ca</b> - Chose this mode to always require encryption and to verify that the source database server has a valid SSL certificate\n  <b>verify-full</b> - This is the most secure mode. Chose this mode to always require encryption and to verify the identity of the source database server\n See more information - <a href=\"https://jdbc.postgresql.org/documentation/head/ssl-client.html\"> in the docs</a>.",
+        "type": "object",
+        "order": 6,
+        "oneOf": [
+          {
+            "title": "disable",
+            "additionalProperties": false,
+            "description": "Disable SSL.",
+            "required": ["mode"],
+            "properties": {
+              "mode": {
+                "type": "string",
+                "const": "disable",
+                "enum": ["disable"],
+                "default": "disable",
+                "order": 0
+              }
+            }
+          },
+          {
+            "title": "trust",
+            "additionalProperties": false,
+            "description": "Trust SSL mode.",
+            "required": ["mode"],
+            "properties": {
+              "mode": {
+                "type": "string",
+                "const": "trust",
+                "enum": ["trust"],
+                "default": "trust",
+                "order": 0
+              }
+            }
+          },
+          {
+            "title": "verify-ca",
+            "additionalProperties": false,
+            "description": "Verify-ca SSL mode.",
+            "required": ["mode", "ca_certificate"],
+            "properties": {
+              "mode": {
+                "type": "string",
+                "const": "verify-ca",
+                "enum": ["verify-ca"],
+                "default": "verify-ca",
+                "order": 0
+              },
+              "ca_certificate": {
+                "type": "string",
+                "title": "CA certificate",
+                "description": "CA certificate",
+                "airbyte_secret": true,
+                "multiline": true,
+                "order": 1
+              }
+            }
+          },
+          {
+            "title": "verify-full",
+            "additionalProperties": false,
+            "description": "Verify-full SSL mode.",
+            "required": [
+              "mode",
+              "ca_certificate"
+            ],
+            "properties": {
+              "mode": {
+                "type": "string",
+                "const": "verify-full",
+                "enum": ["verify-full"],
+                "default": "verify-full",
+                "order": 0
+              },
+              "ca_certificate": {
+                "type": "string",
+                "title": "CA certificate",
+                "description": "CA certificate",
+                "airbyte_secret": true,
+                "multiline": true,
+                "order": 1
+              }
+            }
+          }
+        ]
       }
     }
   }

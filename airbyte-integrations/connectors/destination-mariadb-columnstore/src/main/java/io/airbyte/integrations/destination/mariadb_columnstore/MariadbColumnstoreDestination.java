@@ -4,6 +4,8 @@
 
 package io.airbyte.integrations.destination.mariadb_columnstore;
 
+import static io.airbyte.integrations.destination.mariadb_columnstore.MariaDbColumnstoreSslUtils.PARAM_SSL_MODE;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.ImmutableMap;
 import io.airbyte.commons.json.Jsons;
@@ -74,6 +76,13 @@ public class MariadbColumnstoreDestination extends AbstractJdbcDestination imple
     }
 
     return new AirbyteConnectionStatus().withStatus(Status.SUCCEEDED);
+  }
+
+  @Override
+  protected Map<String, String> getConnectionProperties(JsonNode config) {
+    var props = super.getConnectionProperties(config);
+    props.putAll(MariaDbColumnstoreSslUtils.handleSslProperties(config.get(PARAM_SSL_MODE)));
+    return props;
   }
 
   @Override
